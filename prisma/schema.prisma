@@ -47,10 +47,10 @@ model Deposit {
   amountCents     Int
   status          DepositStatus @default(PENDING)
   contactId       String
-  organizationId  String?
+  organizationId  String?          // optional
 
   contact         Contact      @relation(fields: [contactId], references: [id])
-  organization    Organization @relation(fields: [organizationId], references: [id])
+  organization    Organization? @relation(fields: [organizationId], references: [id]) // <- add ?
 }
 
 enum DepositStatus {
