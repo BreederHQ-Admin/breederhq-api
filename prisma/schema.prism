@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  firstName    String
+  lastName     String
+  email        String?  @unique
+  phone        String?
+  organizations OrganizationOnContact[]
+  deposits     Deposit[]
+}
+
+model Organization {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  website    String?
+  contacts   OrganizationOnContact[]
+  deposits   Deposit[]
+}
+
+model OrganizationOnContact {
+  contactId      String
+  organizationId String
+  role           String?
+
+  contact        Contact      @relation(fields: [contactId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([contactId, organizationId])
+}
+
+model Deposit {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  amountCents     Int
+  status          DepositStatus @default(PENDING)
+  contactId       String
+  organizationId  String?
+
+  contact         Contact      @relation(fields: [contactId], references: [id])
+  organization    Organization @relation(fields: [organizationId], references: [id])
+}
+
+enum DepositStatus {
+  PENDING
+  COMMITTED
+  REFUNDED
+}
