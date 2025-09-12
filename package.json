@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "engines": { "node": "20.x" },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "tsx src/server.ts",
+    "build": "tsc -p .",
+    "start": "node dist/server.js",
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.dev.migrate -- prisma migrate dev",
@@ -16,7 +17,6 @@
     "prisma:status:prod": "dotenv -e .env.prod.migrate -- prisma migrate status",
     "prisma:studio": "prisma studio"
   },
-  "prisma": { "schema": "prisma/schema.prisma" },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
     "@prisma/client": "^6.16.1",
